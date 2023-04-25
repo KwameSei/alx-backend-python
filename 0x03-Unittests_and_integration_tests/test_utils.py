@@ -8,6 +8,7 @@ import unittest
 # Importing modules
 access_nested_map = __import__('utils').access_nested_map
 get_json = __import__('utils').get_json
+memoize = __import__('utils').memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -48,6 +49,26 @@ class TestGetJson(unittest.TestCase):
             result = get_json(url)
         # get_response.assert_called_once_with(url)
             self.assertEqual(result, payload)
+
+
+class TestMemoize(unittest.TestCase):
+    """ Class that tests memoize function """
+    def test_memoize(self):
+        """ Function to test memoize method """
+        class TestClass:
+
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                return self.a_method()
+
+        with patch.object(TestClass, 'a_method') as element:
+            element_test = TestClass()
+            element_test.a_property()
+            element_test.a_property()
+            element.assert_called_once()
 
 
 if __name__ == '__main__':
